@@ -1,0 +1,355 @@
+:root {
+  --tnb-blue: #1b3f8f;
+  --tnb-red: #d32027;
+  --line: #000;
+  --grey-bg: #d9d9d9;
+  --soft-bg: #f4f6fb;
+  --field-bg: #fff8e1;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+  background: #e7e9ee;
+}
+
+/* ---------------- App shell ---------------- */
+#app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+#sidebar {
+  width: 250px;
+  flex: 0 0 250px;
+  background: var(--tnb-blue);
+  color: #fff;
+  padding: 14px 0;
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  overflow-y: auto;
+}
+
+#sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 14px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.25);
+  margin-bottom: 10px;
+}
+#sidebar .brand img { height: 34px; background: #fff; border-radius: 4px; padding: 2px; }
+#sidebar .brand span { font-size: 13px; font-weight: bold; line-height: 1.2; }
+
+#sidebar nav button {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  line-height: 1.3;
+}
+#sidebar nav button .idx {
+  background: rgba(255,255,255,.18);
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  flex: 0 0 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+#sidebar nav button:hover { background: rgba(255,255,255,.12); }
+#sidebar nav button.active { background: rgba(255,255,255,.2); border-left-color: var(--tnb-red); font-weight: bold; }
+
+#sidebar .side-actions {
+  padding: 14px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#sidebar .side-actions button {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+#sidebar .side-actions button:hover { background: rgba(255,255,255,.25); }
+
+#main {
+  margin-left: 250px;
+  flex: 1;
+  padding: 22px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1050px;
+  margin: 0 auto 14px auto;
+}
+.toolbar h1 { font-size: 17px; margin: 0; color: var(--tnb-blue); }
+.toolbar .doc-code { font-size: 12px; color: #555; }
+.toolbar .btns button {
+  margin-left: 6px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  border: 1px solid var(--tnb-blue);
+  background: var(--tnb-blue);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.toolbar .btns button.secondary { background: #fff; color: var(--tnb-blue); }
+.toolbar .btns button:hover { opacity: .85; }
+
+/* ---------------- Sheet page ---------------- */
+.doc-page {
+  background: #fff;
+  margin: 0 auto 26px auto;
+  padding: 14mm 12mm;
+  box-shadow: 0 1px 6px rgba(0,0,0,.25);
+  position: relative;
+}
+.doc-page.portrait { width: 210mm; min-height: 297mm; }
+.doc-page.landscape { width: 297mm; min-height: 210mm; }
+
+.doc-page.hidden-page { display: none; }
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.doc-header img.logo { height: 42px; }
+.doc-header .doc-code { font-size: 11px; font-weight: bold; }
+.doc-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 6px 0 14px 0;
+}
+.doc-title.bar { background: var(--grey-bg); padding: 6px; text-align: left; text-decoration: underline; }
+.doc-title.small-caps { font-variant: small-caps; }
+
+table.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+table.form-table th, table.form-table td {
+  border: 1px solid var(--line);
+  padding: 4px 5px;
+  vertical-align: top;
+}
+table.form-table th { background: #eee; font-weight: bold; text-align: center; }
+
+.quality-service-table { font-size: 10.5px; }
+.quality-service-table td { word-break: break-word; }
+
+.kv-row { display: flex; margin-bottom: 4px; font-size: 12px; }
+.kv-row .k { width: 230px; font-weight: bold; flex: 0 0 230px; }
+.kv-row .sep { width: 14px; flex: 0 0 14px; }
+.kv-row .v { flex: 1; }
+
+input[type=text], input[type=date], input[type=number], textarea, select {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  border: 1px solid #9aa1ac;
+  background: var(--field-bg);
+  padding: 3px 5px;
+  border-radius: 2px;
+  width: 100%;
+}
+textarea { resize: vertical; min-height: 30px; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--tnb-blue); background: #fff; }
+
+.chk-box {
+  width: 16px; height: 16px;
+  cursor: pointer;
+}
+
+.small-note { font-size: 10.5px; color: #555; }
+
+.sig-grid { display: grid; gap: 10px; margin-top: 14px; break-inside: avoid; }
+.sig-cell { border: 1px solid var(--line); padding: 8px; font-size: 11px; break-inside: avoid; }
+.sig-cell .role { font-weight: bold; margin-bottom: 34px; display:block; }
+.sig-cell .field { display:flex; gap:4px; margin-top:4px; align-items:center; }
+.sig-cell .field label { flex: 0 0 90px; font-weight:bold; }
+.sig-cell .field input { flex:1; }
+
+/* Taller signature cells with a blank area for a handwritten signature + official stamp,
+   and blank underlines instead of inputs for Nama/No. Pekerja/Tarikh */
+.sig-cell.tall { min-height: 190px; }
+.sig-cell.tall .role { margin-bottom: 8px; }
+.sig-cell.tall .stamp-space {
+  height: 90px;
+  border: 1px dashed #aaa;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.sig-cell .blank-field { display:flex; gap:4px; margin-top:10px; align-items:flex-end; flex-wrap: wrap; }
+.sig-cell .blank-field label { flex: 0 0 auto; font-weight:bold; white-space: nowrap; }
+.sig-cell .blank-field .line { flex:1; min-width: 40px; border-bottom:1px solid #000; height:14px; }
+
+.add-row-btn {
+  margin-top: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border: 1px dashed var(--tnb-blue);
+  background: #fff;
+  color: var(--tnb-blue);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.del-row-btn {
+  background: #fff0f0;
+  border: 1px solid var(--tnb-red);
+  color: var(--tnb-red);
+  cursor: pointer;
+  font-size: 11px;
+  border-radius: 3px;
+  padding: 2px 6px;
+}
+
+/* --------- checklist --------- */
+.checklist-table th { background: var(--tnb-blue); color: #fff; }
+.checklist-table td.status-ADA { color: #12742f; font-weight: bold; }
+.checklist-table td.status-TIADA { color: #b3261e; font-weight: bold; }
+.perkara-cell {
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.3;
+  min-height: 20px;
+  display: block;
+}
+
+/* --------- CASE questionnaire --------- */
+.case-section-title {
+  background: #111;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 8px;
+  font-size: 12px;
+  margin-top: 16px;
+}
+.case-q { border: 1px solid var(--line); margin-bottom: 10px; page-break-inside: avoid; }
+.case-q .q-head { padding: 6px 8px; font-size: 11.5px; border-bottom: 1px solid var(--line); background: #fafafa; }
+.case-q .q-head .my { font-weight: bold; }
+.case-q .q-head .en { font-style: italic; color: #333; }
+.case-q .options { padding: 4px 8px; }
+.case-opt { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; border-bottom: 1px dashed #ccc; font-size: 11px; }
+.case-opt:last-child { border-bottom: none; }
+.case-opt input { margin-top: 3px; flex: 0 0 auto; }
+.case-opt .lbl { flex: 0 0 220px; font-weight: bold; }
+.case-opt .desc .my { display:block; }
+.case-opt .desc .en { display:block; font-style: italic; color: #444; }
+.case-q .comment { padding: 6px 8px; border-top: 1px solid var(--line); }
+.case-q .comment label { font-size: 11px; font-weight: bold; display:block; margin-bottom: 3px; }
+
+/* --------- AMK checkbox list --------- */
+.jenis-kerja-list { border: 1px solid var(--line); width: 60%; margin: 8px 0; }
+.jenis-kerja-list .row { display: flex; border-bottom: 1px solid var(--line); }
+.jenis-kerja-list .row:last-child { border-bottom: none; }
+.jenis-kerja-list .row .box { width: 34px; border-right: 1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+.jenis-kerja-list .row .lbl { padding: 4px 8px; font-size: 12px; }
+
+/* --------- Gantt --------- */
+.table-scroll { overflow-x: auto; }
+.compact-table { font-size: 10px; }
+.compact-table th, .compact-table td { padding: 2px 3px; }
+.compact-table input { font-size: 10px; padding: 2px 3px; }
+
+.gantt-wrap { overflow-x: auto; }
+table.gantt-table { border-collapse: collapse; font-size: 9.5px; width: max-content; }
+table.gantt-table th, table.gantt-table td {
+  border: 1px solid #555;
+  padding: 2px;
+  text-align: center;
+  min-width: 16px;
+  height: 16px;
+}
+table.gantt-table th.task-col, table.gantt-table td.task-col { min-width: 220px; text-align: left; font-size: 10.5px; }
+table.gantt-table th.qty-col, table.gantt-table td.qty-col { min-width: 60px; }
+table.gantt-table .day-cell { cursor: pointer; user-select: none; width: 16px; }
+table.gantt-table .day-cell[data-mark="T"] { background: #ff3b3b; color:#fff; font-weight:bold; }
+table.gantt-table .day-cell[data-mark="A"] { background: #ffd54a; font-weight:bold; }
+table.gantt-table .day-cell[data-mark="O"] { background: #bbb; }
+table.gantt-table .day-cell[data-mark="V"] { background: #2e7d32; color:#fff; font-weight:bold; }
+table.gantt-table .qty-col input { width: 100%; box-sizing: border-box; font-size: 9.5px; text-align: center; }
+.gantt-legend { display:flex; gap: 18px; margin-top: 8px; font-size: 11px; align-items:center; }
+.gantt-legend .box { width: 16px; height: 16px; display:inline-block; border: 1px solid #555; margin-right: 4px; vertical-align: middle;}
+
+.page-break { height: 0; }
+
+/* --------- Field book / laporan harian --------- */
+.fieldbook-table th, .fieldbook-table td { min-width: 95px; }
+
+/* ---------------- Print ----------------
+   JS toggles a single ".print-target" class on whichever <section class="doc-page">
+   elements should be printed (one page for "print this page", all nine for
+   "print all"). Everything else is hidden; consecutive printed pages get a
+   page-break between them. */
+@media print {
+  #sidebar, .toolbar, .add-row-btn, .del-row-btn, .no-print { display: none !important; }
+  #main { margin-left: 0; padding: 0; }
+  body { background: #fff; }
+
+  .doc-page { display: none !important; box-shadow: none; margin: 0; }
+  .doc-page.print-target { display: block !important; }
+  .doc-page.print-target + .doc-page.print-target { break-before: page; }
+
+  @page portrait-page { size: A4 portrait; margin: 10mm; }
+  @page landscape-page { size: A4 landscape; margin: 8mm; }
+  .doc-page.portrait { page: portrait-page; width: auto; min-height: auto; }
+  .doc-page.landscape { page: landscape-page; width: auto; min-height: auto; }
+  input, textarea, select { background: transparent !important; border-color: #999 !important; }
+  .page-break { break-before: page; }
+  .table-scroll { overflow: visible; }
+
+  /* Keep tables/boxes from being sliced across a page boundary; let rows
+     inside long tables (checklist, line-items, gantt) break normally since
+     those are meant to flow across multiple pages. */
+  table.form-table thead { display: table-header-group; }
+  table.form-table tr { break-inside: avoid; }
+  .case-section-title { break-after: avoid; }
+  .jenis-kerja-list, .kv-row { break-inside: avoid; }
+
+  /* Checklist (page 1) has 28 rows plus a few that wrap to 2-3 lines; tighten
+     it just enough to keep the whole list on a single printed sheet. The
+     <input>/<select> cells don't inherit the table's font-size (form controls
+     never inherit ancestor font by default), so they must be targeted directly
+     or they stay at their normal size and keep forcing row 28 onto page 2. */
+  .checklist-table { font-size: 9px; }
+  .checklist-table th, .checklist-table td { padding: 1px 4px; }
+  .checklist-table input, .checklist-table select {
+    font-size: 9px;
+    padding: 0px 3px;
+    height: 15px;
+  }
+  .checklist-table textarea.perkara-cell {
+    font-size: 9px;
+    padding: 1px 3px;
+  }
+  .doc-page[data-key="checklist"] .doc-header { margin-bottom: 2px; }
+  .doc-page[data-key="checklist"] .doc-header img.logo { height: 30px; }
+  .doc-page[data-key="checklist"] .doc-title { margin: 2px 0 6px 0; font-size: 12px; }
+}

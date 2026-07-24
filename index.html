@@ -1,0 +1,597 @@
+<title>Sistem Borang LKS - TNB</title>
+<link rel="icon" type="image/png" href="assets/tnb_logo.png">
+<link rel="stylesheet" href="css/style.css">
+
+<div id="app-shell">
+  <aside id="sidebar" class="no-print">
+    <div class="brand">
+      <img src="assets/tnb_logo.png" alt="TNB">
+      <span>SISTEM BORANG<br>LAPORAN KERJA SELESAI (LKS)</span>
+    </div>
+    <nav id="page-nav">
+      <button data-page="checklist"><span class="idx">1</span> SENARAI SEMAK LKS</button>
+      <button data-page="akselesai"><span class="idx">2</span> SURAT AKUAN KERJA SELESAI</button>
+      <button data-page="case"><span class="idx">3</span> CASE (Penilaian Kontraktor)</button>
+      <button data-page="bq"><span class="idx">4</span> BQ LKS (Laporan Kerja Selesai)</button>
+      <button data-page="jms"><span class="idx">5</span> JMS (Joint Management Sheet)</button>
+      <button data-page="imbangan"><span class="idx">6</span> Jadual Imbangan Bahan</button>
+      <button data-page="fieldbook"><span class="idx">7</span> Laporan Harian Penyelia</button>
+      <button data-page="amk"><span class="idx">8</span> Arahan Mula Kerja (AMK)</button>
+      <button data-page="gantt"><span class="idx">9</span> Carta Gantt</button>
+      <button data-page="records"><span class="idx">10</span> Rekod Tersimpan (Online)</button>
+    </nav>
+    <div class="side-actions">
+      <button id="btn-print-all">🖨️ Cetak Semua Borang (PDF)</button>
+      <button id="btn-export">⬇️ Simpan Data (.json)</button>
+      <button id="btn-import">⬆️ Muat Naik Data (.json)</button>
+      <button id="btn-reset">🗑️ Reset Semua Data</button>
+      <input type="file" id="file-import" accept="application/json" style="display:none">
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="toolbar">
+      <div>
+        <h1 id="page-title">SENARAI SEMAK LKS</h1>
+        <div class="doc-code" id="page-code">ENGR-1401-PSI</div>
+      </div>
+      <div class="btns">
+        <button class="secondary" id="btn-print-page">🖨️ Cetak halaman ini</button>
+      </div>
+    </div>
+
+    <!-- ============ 1. CHECKLIST ============ -->
+    <section class="doc-page portrait" data-key="checklist">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1401-PSI</div>
+      </div>
+      <div class="doc-title">SENARAI SEMAK LKS</div>
+      <table class="form-table checklist-table">
+        <thead>
+          <tr><th style="width:40px">BIL</th><th>PERKARA</th><th style="width:140px">NO. DOKUMEN</th><th style="width:90px">ADA/TIADA</th></tr>
+        </thead>
+        <tbody id="checklist-body"></tbody>
+      </table>
+    </section>
+
+    <!-- ============ 2. A.K SELESAI (SURAT AKUAN KERJA SELESAI) ============ -->
+    <section class="doc-page portrait hidden-page" data-key="akselesai">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1402-PSI</div>
+      </div>
+      <div class="doc-title">SURAT AKUAN KERJA SELESAI</div>
+
+      <div class="kv-row"><div class="k">No Pesanan Belian</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+      <div class="kv-row"><div class="k">No Projek</div><div class="sep">:</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k">Nama Kontraktor</div><div class="sep">:</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+      <div class="kv-row"><div class="k">Jumlah P.O (RM)</div><div class="sep">:</div><div class="v"><input type="number" step="0.01" data-field="totalPO"></div></div>
+      <div class="kv-row"><div class="k">Jumlah yang diperakukan (RM)</div><div class="sep">:</div><div class="v"><input type="number" step="0.01" data-field="totalClaimed" readonly></div></div>
+      <div class="kv-row"><div class="k">Keterangan Kerja</div><div class="sep">:</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+
+      <p style="font-size:12px;"><b>JENIS KERJA :</b>
+        <select data-field="jobType" style="width:auto;display:inline-block">
+          <option value=""></option>
+          <option>KVT</option><option>KVR</option><option>SAVT</option><option>SAVR</option>
+          <option>HDD</option><option>JOINT</option><option>MILL</option><option>PAVE</option>
+        </select>
+      </p>
+      <p style="font-size:11.5px">Dengan ini kami mengesahkan bahawa kerja-kerja Perkhidmatan/Pembekalan yang disebutkan bersama-sama
+      lampiran ini telah disiapkan dan dilaksanakan dengan sepenuhnya, serta diperakukan untuk tujuan pembayaran</p>
+
+      <table class="form-table">
+        <thead><tr><th>NO SERVICE ENTRY (SE)</th><th>JUMLAH PURCHASE ORDER (RM)</th><th>JUMLAH DITUNTUT (RM)</th><th style="width:26px" class="no-print"></th></tr></thead>
+        <tbody id="se-body-ak"></tbody>
+        <tfoot>
+          <tr><td style="text-align:center;font-weight:bold">JUMLAH</td><td><b><span data-display="seTotalPO"></span></b></td><td><b><span data-display="seTotalClaimed"></span></b></td><td class="no-print"></td></tr>
+        </tfoot>
+      </table>
+      <button class="add-row-btn no-print" data-add="se">+ Tambah Baris</button>
+
+      <table class="form-table" style="margin-top:10px; table-layout:fixed">
+        <tr><td style="vertical-align:top">
+          <b>Quality Service</b>
+          <table class="form-table quality-service-table" style="margin-top:6px; width:100%; table-layout:fixed">
+            <tr><td>1. Kepatuhan Kepada Spesifikasi (Compliance To Specifications) (35)</td><td style="width:55px"><input type="number" min="0" max="35" data-field="qs1"></td></tr>
+            <tr><td>2. Kualiti Kerja &amp; Kemahiran (Workmanship &amp; Skill) (25)</td><td style="width:55px"><input type="number" min="0" max="25" data-field="qs2"></td></tr>
+            <tr><td>3. Dokumentasi (Documentation) (10)</td><td style="width:55px"><input type="number" min="0" max="10" data-field="qs3"></td></tr>
+            <tr><td>4. Penggunaan Alat-Alat Perkakasan &amp; Mesin (Tools &amp; Instrument) (10)</td><td style="width:55px"><input type="number" min="0" max="10" data-field="qs4"></td></tr>
+            <tr><td>5. Ketepatan Masa (Punctuality) (10)</td><td style="width:55px"><input type="number" min="0" max="10" data-field="qs5"></td></tr>
+            <tr><td>6. Kepatuhan Kepada Prosedur Keselamatan (Compliance to Safety Procedures) (5)</td><td style="width:55px"><input type="number" min="0" max="5" data-field="qs6"></td></tr>
+            <tr><td>7. Pengenalan Bahan-bahan TNB (Material Handling) (5)</td><td style="width:55px"><input type="number" min="0" max="5" data-field="qs7"></td></tr>
+            <tr><td style="text-align:right;font-weight:bold">JUMLAH</td><td style="width:55px"><b><span data-display-num="qsTotal"></span></b></td></tr>
+          </table>
+        </td>
+        <td style="width:170px;vertical-align:top">
+          <b>Timeliness Service</b>
+          <div class="kv-row" style="margin-top:8px"><div class="k" style="width:auto;flex:none;margin-bottom:2px">Tarikh Mula</div></div>
+          <div class="kv-row" style="margin-bottom:8px"><input type="date" data-field="dateStart"></div>
+          <div class="kv-row" style="margin-bottom:2px"><div class="k" style="width:auto;flex:none">Tarikh Sasaran Siap</div></div>
+          <div class="kv-row" style="margin-bottom:8px"><input type="date" data-field="dateTargetEnd"></div>
+          <div class="kv-row" style="margin-bottom:2px"><div class="k" style="width:auto;flex:none">Tarikh Siap Sebenar</div></div>
+          <div class="kv-row"><input type="date" data-field="dateActualEnd"></div>
+        </td></tr>
+      </table>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(3,1fr)">
+        <div class="sig-cell tall"><span class="role">Disediakan<br><small>Penyelia / Foreman/Supervisior/Foreman<br>Project Implementation Subzone</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Diperakukan<br><small>Eksekutif/Jurutera/Jurutera Kanan</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Diluluskan<br><small>Pengurus Kawasan/Head Zone Asset Development</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. CASE ============ -->
+    <section class="doc-page portrait hidden-page" data-key="case">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+      </div>
+      <div class="doc-title">CONTRACTOR AND SUPPLIER EVALUATION (CASE)<br><span style="font-weight:normal;font-size:12px">LAPORAN KERJA SELESAI (LKS)</span></div>
+
+      <div class="kv-row"><div class="k">No Pesanan Belian</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+      <div class="kv-row"><div class="k">No Projek</div><div class="sep">:</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k">Nama Kontraktor</div><div class="sep">:</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+      <div class="kv-row"><div class="k">Jumlah P.O</div><div class="sep">:</div><div class="v"><input type="number" step="0.01" data-field="totalPO"></div></div>
+      <div class="kv-row"><div class="k">Jumlah yang diperakukan (RM)</div><div class="sep">:</div><div class="v"><input type="number" step="0.01" data-field="totalClaimed" readonly></div></div>
+      <div class="kv-row"><div class="k">Keterangan Kerja</div><div class="sep">:</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+
+      <table class="form-table" style="margin-top:10px">
+        <tr>
+          <td style="width:52%;vertical-align:top">
+            <b>TEMPLET PENILAIAN</b> <span class="small-note">(SILA TANDA TEMPLET YANG BERKAITAN)</span><br><br>
+            <label style="display:block;margin-bottom:6px"><input type="radio" name="caseTempletType" value="project" data-radio-field="caseTempletType"> <i>WORKS ASSET DEVELOPMENT (PROJECT)</i></label>
+            <label style="display:block;margin-bottom:6px"><input type="radio" name="caseTempletType" value="om" data-radio-field="caseTempletType"> <i>WORKS OPERATION &amp; MAINTENANCE</i></label>
+            <label style="display:block;margin-bottom:6px"><input type="radio" name="caseTempletType" value="general" data-radio-field="caseTempletType"> <i>SERVICE GENERAL</i></label>
+            <label style="display:block"><input type="radio" name="caseTempletType" value="security" data-radio-field="caseTempletType"> <i>SERVICE SECURITY</i></label>
+          </td>
+          <td style="width:48%;vertical-align:top">
+            <b><u>Kelepasan Masa (Timeliness / Services)</u></b>
+            <div class="kv-row" style="margin-top:8px"><div class="k" style="width:140px">Tarikh Mula</div><div class="v"><input type="date" data-field="dateStart"></div></div>
+            <div class="kv-row"><div class="k" style="width:140px">Tarikh Sasaran Siap</div><div class="v"><input type="date" data-field="dateTargetEnd"></div></div>
+            <div class="kv-row"><div class="k" style="width:140px">Tarikh Siap Sebenar</div><div class="v"><input type="date" data-field="dateActualEnd"></div></div>
+            <div class="kv-row"><div class="k" style="width:140px">Tarikh Terima Dokumen</div><div class="v"><input type="date" data-field="dateReceiveDoc"></div></div>
+          </td>
+        </tr>
+      </table>
+
+      <p style="font-size:12px;margin-top:10px"><b>JENIS KERJA :</b>
+        <select data-field="jobType" style="width:auto;display:inline-block">
+          <option value=""></option>
+          <option>KVT</option><option>KVR</option><option>SAVT</option><option>SAVR</option>
+          <option>HDD</option><option>JOINT</option><option>MILL</option><option>PAVE</option>
+        </select>
+      </p>
+      <p style="font-size:11.5px">Dengan ini mengesahkan bahawa kerja-kerja Perkhidmatan/Pembekalan yang disebut bersama-sama lampiran ini telah disiapkan dan dilaksanakan dengan sepenuhnya, serta diperakukan untuk tujuan pembayaran</p>
+
+      <table class="form-table">
+        <thead><tr><th>NO SERVICE ENTRY (SE)</th><th>JUMLAH PURCHASE ORDER (RM)</th><th>JUMLAH DITUNTUT (RM)</th><th style="width:26px" class="no-print"></th></tr></thead>
+        <tbody id="se-body-case"></tbody>
+        <tfoot>
+          <tr><td style="text-align:center;font-weight:bold">JUMLAH</td><td><b><span data-display="seTotalPO"></span></b></td><td><b><span data-display="seTotalClaimed"></span></b></td><td class="no-print"></td></tr>
+        </tfoot>
+      </table>
+      <button class="add-row-btn no-print" data-add="se">+ Tambah Baris</button>
+      <p style="font-size:11.5px">LAMPIRKAN TEMPLET PENILAIAN YANG BERKENAAN</p>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(3,1fr)">
+        <div class="sig-cell tall"><span class="role">Disediakan<br><small>Penyelia / Foreman</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Diperakukan<br><small>Foreman / Eksekutif / Jurutera</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Diluluskan<br><small>Jurutera/Jurutera Kanan</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+
+      <!-- ---- page 2 of PRINT7.pdf: cover / template-selection page ---- -->
+      <div class="page-break"></div>
+      <div style="text-align:center;margin:10px 0"><img src="assets/case_logo.png" alt="CASE" style="height:56px"></div>
+      <div class="doc-title" style="text-decoration:underline">LAPORAN CONTRACTOR AND SUPPLIER EVALUATION (CASE)</div>
+      <table class="form-table" style="margin-top:8px">
+        <tr><td style="width:33%;font-weight:bold">NO PESANAN BELIAN</td><td><input type="text" data-field="poNumber"></td></tr>
+        <tr><td style="font-weight:bold">NO SERVICE ENTRY</td><td><input type="text" data-field="serviceEntryNo"></td></tr>
+        <tr><td style="font-weight:bold">NAMA KONTRAKTOR</td><td><input type="text" data-field="contractorName"></td></tr>
+        <tr><td style="font-weight:bold;vertical-align:top">TEMPLET PENILAIAN</td>
+          <td>SILA TANDA DAN ISI <i>TEMPLATE</i> YANG BERKAITAN<br>
+            <label style="display:block;margin-top:6px"><input type="radio" name="caseSection" value="technical" data-radio-field="caseSection"> <i>A. SERVICES TECHNICAL</i></label>
+            <label style="display:block"><input type="radio" name="caseSection" value="general" data-radio-field="caseSection"> <i>B. SERVICES GENERAL</i></label>
+          </td>
+        </tr>
+      </table>
+      <table class="form-table" style="margin-top:0">
+        <tr><td colspan="2" style="background:#111;color:#fff;font-weight:bold">Timeliness</td></tr>
+        <tr><td style="width:33%;font-weight:bold">Start Date</td><td><input type="date" data-field="dateStart"></td></tr>
+        <tr><td style="font-weight:bold">Target End Date</td><td><input type="date" data-field="dateTargetEnd"></td></tr>
+        <tr><td style="font-weight:bold">Actual End Date</td><td><input type="date" data-field="dateActualEnd"></td></tr>
+      </table>
+      <p class="small-note" style="font-style:italic">Sila pastikan Laporan CASE yang diisi dalam borang manual ini sama dengan Laporan CASE yang diisi oleh Pemula semasa transaksi <b>Service Entry</b> dalam sistem ERMS untuk tujuan Audit</p>
+
+      <div class="page-break"></div>
+      <div id="case-questions"></div>
+    </section>
+
+    <!-- ============ 4. BQ LKS ============ -->
+    <section class="doc-page portrait hidden-page" data-key="bq">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div></div>
+      </div>
+      <div class="doc-title">SISTEM JADUAL HARGA TETAP BAGI KERJA KONTRAK<br><span style="font-size:12.5px">LAPORAN KERJA SELESAI / BQ SEBENAR</span></div>
+
+      <div class="kv-row"><div class="k" style="width:120px">NO. PROJEK</div><div class="sep">:</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:120px">TAJUK PROJEK</div><div class="sep">:</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+      <div class="kv-row"><div class="k" style="width:120px">KONTRAKTOR</div><div class="sep">:</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+      <div class="kv-row"><div class="k" style="width:120px">JENIS KERJA</div><div class="sep">:</div><div class="v"><input type="text" data-field="jobType"></div></div>
+      <div class="kv-row"><div class="k" style="width:120px">NO. PO.</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+
+      <div class="table-scroll">
+      <table class="form-table compact-table" style="margin-top:8px">
+        <thead>
+          <tr>
+            <th style="width:32px">Item</th><th style="width:72px">Service ID</th><th>KETERANGAN KERJA</th><th style="width:34px">Unit</th>
+            <th style="width:48px">Kuantiti Sebenar</th><th style="width:48px">Kuantiti Dalam P.O</th>
+            <th style="width:52px">Kadar Per Unit RM (PO asal)</th><th style="width:58px">Jumlah Sebenar</th>
+            <th style="width:58px">Jumlah Harga Dalam P.O RM</th><th style="width:52px">Perbezaan RM</th><th style="width:20px" class="no-print"></th>
+          </tr>
+        </thead>
+        <tbody id="bq-body"></tbody>
+        <tfoot>
+          <tr><td colspan="7" style="text-align:right;font-weight:bold">JUMLAH KOS KESELURUHAN</td>
+            <td><b><span data-display="bqTotalActual"></span></b></td>
+            <td><b><span data-display="bqTotalPO"></span></b></td>
+            <td><b><span data-display="bqTotalDiff"></span></b></td><td class="no-print"></td></tr>
+        </tfoot>
+      </table>
+      </div>
+      <button class="add-row-btn no-print" data-add="bq">+ Tambah Baris</button>
+
+      <table class="form-table" style="width:340px;margin-left:auto;margin-top:8px">
+        <tr><td>JUMLAH ANGGARAN</td><td><b><span data-display="bqTotalPO"></span></b></td></tr>
+        <tr><td>PERBEZAAN</td><td><b><span data-display="bqTotalDiff"></span></b></td></tr>
+        <tr><td>KOS KERJA SEBENAR</td><td><b><span data-display="bqTotalActual"></span></b></td></tr>
+      </table>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(4,1fr); margin-top:16px">
+        <div class="sig-cell tall"><span class="role">Di Sediakan Oleh :<br><small>Kontraktor</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja/IC</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Di Semak Oleh :<br><small>Juruteknik / Penyelia</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Di Perakukan Oleh :<br><small>Juruteknik T/Kanan</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Diluluskan :<br><small>Jurutera</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No. Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. JMS ============ -->
+    <section class="doc-page portrait hidden-page" data-key="jms">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div></div>
+      </div>
+      <div class="doc-title" style="font-style:italic">BORANG JOINT MANAGEMENT SHEET (JMS)</div>
+
+      <div class="kv-row"><div class="k" style="width:150px">NO. PESANAN BELIAN</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">NO. WORK ORDER</div><div class="sep">:</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">NAMA KONTRAKTOR</div><div class="sep">:</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">JUMLAH PO</div><div class="sep">:</div><div class="v"><input type="number" step="0.01" data-field="totalPO"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">KETERANGAN KERJA</div><div class="sep">:</div><div class="v"><textarea rows="2" data-field="workDescription"></textarea></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">JENIS KERJA</div><div class="sep">:</div><div class="v"><input type="text" data-field="jobType"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">TARIKH SEMAKAN</div><div class="sep">:</div><div class="v"><input type="date" data-field="jms_tarikhSemakan"></div></div>
+
+      <div class="table-scroll">
+      <table class="form-table compact-table">
+        <thead>
+          <tr><th style="width:28px">NO.</th><th style="width:70px">SERVIS ID</th><th>BUTIR-BUTIR KERJA</th>
+            <th style="width:34px">Unit</th><th style="width:48px">Kadar (RM)</th><th style="width:48px">Kuantiti pada PO</th>
+            <th style="width:58px">Jumlah PO (RM)</th><th style="width:48px">Kuantiti Sebenar</th><th style="width:62px">Jumlah Sebenar (RM)</th></tr>
+        </thead>
+        <tbody id="jms-body"></tbody>
+        <tfoot>
+          <tr><td colspan="6" style="text-align:right;font-weight:bold">Jumlah</td>
+            <td><b><span data-display="bqTotalPO"></span></b></td><td></td><td><b><span data-display="bqTotalActual"></span></b></td></tr>
+          <tr><td colspan="8" style="text-align:right;font-weight:bold">JUMLAH DIPERAKUKAN</td><td><b><span data-display="bqTotalActual"></span></b></td></tr>
+        </tfoot>
+      </table>
+      </div>
+      <p class="small-note">* PO = Purchase Order. Baris jadual disegerakkan terus daripada halaman <b>BQ LKS</b> — sila kemaskini di sana.</p>
+      <p style="font-size:11px">Nota : Adalah dengan ini disahkan semakan bersama telah dilaksanakan di tapak kerja oleh penyelia TNB,
+        <input type="text" style="width:160px;display:inline-block" data-field="jms_penyeliaTNB"> nombor staf
+        <input type="text" style="width:100px;display:inline-block" data-field="jms_noStafTNB"> bersama wakil kontraktor pada tarikh di atas.</p>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(2,1fr)">
+        <div class="sig-cell tall"><span class="role">Wakil Kontraktor<br><small>Tandatangan & Cop Syarikat</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Jawatan</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Wakil TNB<br><small>Tandatangan</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Jawatan</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. JADUAL IMBANGAN ============ -->
+    <section class="doc-page portrait hidden-page" data-key="imbangan">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1403-PSI</div>
+      </div>
+      <div class="doc-title bar">JADUAL IMBANGAN PENGGUNAAN BAHAN</div>
+      <p style="font-size:12px">REKOD PENGGUNAAN BARANG-BARANG</p>
+
+      <div class="kv-row"><div class="k" style="width:150px">Tajuk Projek</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">No Projek</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">No. Pesanan Belian</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:150px">Kontraktor</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+
+      <table class="form-table" style="margin-top:8px">
+        <thead>
+          <tr><th style="width:30px">No</th><th style="width:90px">No Katalog</th><th>Keterangan Barang</th><th style="width:70px">Kod Unit</th>
+            <th style="width:55px">Kuantiti Keluar</th><th style="width:55px">Kuantiti Guna</th><th style="width:55px">Kuantiti Kredit</th>
+            <th style="width:70px">No. Credit Note</th><th style="width:50px">Kuantiti Skrap (Kg)</th><th style="width:50px">Skrap (M)</th><th style="width:70px">No. Skrap</th><th style="width:26px" class="no-print"></th></tr>
+        </thead>
+        <tbody id="imbangan-body"></tbody>
+      </table>
+      <button class="add-row-btn no-print" data-add="imbangan">+ Tambah Baris</button>
+    </section>
+
+    <!-- ============ 7. FIELD BOOK (LAPORAN HARIAN PENYELIA) ============ -->
+    <section class="doc-page landscape hidden-page" data-key="fieldbook">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div style="font-size:12px"><b>NO SIRI :</b> <input type="text" style="width:120px;display:inline-block" data-field="fb_noSiri"></div>
+      </div>
+      <div class="doc-title" style="text-align:left">LAPORAN HARIAN PENYELIA</div>
+      <div class="kv-row"><div class="k" style="width:170px">NOMBOR PESANAN BELIAN</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+      <div class="kv-row"><div class="k" style="width:170px">KETERANGAN PESANAN BELIAN</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+      <div class="kv-row"><div class="k" style="width:170px">NAMA PENYELIA PROJEK</div><div class="v"><input type="text" data-field="fb_namaPenyelia"></div>
+        <div class="k" style="width:130px;text-align:right;padding-right:6px">NO SIRI SAMBUNGAN</div><div class="v" style="flex:0 0 150px"><input type="text" data-field="fb_noSiriSambungan"></div></div>
+
+      <div class="gantt-wrap">
+        <table class="form-table fieldbook-table">
+          <thead>
+            <tr id="fb-header-row"><th style="min-width:220px">SKOP KERJA \ TARIKH</th></tr>
+          </thead>
+          <tbody id="fieldbook-body"></tbody>
+        </table>
+      </div>
+      <button class="add-row-btn no-print" data-add="fieldbook">+ Tambah Skop Kerja</button>
+      <button class="add-row-btn no-print" data-add="fieldbookcol">+ Tambah Tarikh</button>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(2,1fr); margin-top:14px">
+        <div class="sig-cell tall"><span class="role">Dibuat Oleh</span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Disahkan Oleh</span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. AMK (ARAHAN MULA KERJA) ============ -->
+    <section class="doc-page portrait hidden-page" data-key="amk">
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1104-PSI</div>
+      </div>
+      <div class="doc-title">ARAHAN MULA KERJA</div>
+
+      <div class="kv-row"><div class="k">Arahan Kepada</div><div class="sep">:</div><div class="v"><input type="text" data-field="contractorName"></div></div>
+      <div class="kv-row"><div class="k">Tarikh</div><div class="sep">:</div><div class="v" style="flex:0 0 200px"><input type="date" data-field="amk_tarikhArahan"></div></div>
+
+      <p style="font-weight:bold;margin-top:10px">Butiran Tapak :</p>
+      <div class="kv-row"><div class="k">Lokasi Kerja</div><div class="sep">:</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+      <div class="kv-row"><div class="k">No Projek/No Sambungan Pengguna</div><div class="sep">:</div><div class="v"><input type="text" data-field="projectNumber"></div></div>
+      <div class="kv-row"><div class="k">Kod Kerja</div><div class="sep">:</div><div class="v"><input type="text" data-field="amk_kodKerja"></div></div>
+      <div class="kv-row"><div class="k">No Pesanan Belian</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+
+      <p style="font-size:11.5px">Sila tuan laksanakan kerja-kerja seperti di bawah mengikut prosidur yang ditetapkan oleh TNB dan Pesanan Belian</p>
+
+      <p><b>1. Jenis Kerja</b> &nbsp; <i>(Tandakan √ pada yang perlu)</i></p>
+      <div class="jenis-kerja-list" id="amk-jeniskerja"></div>
+      <div class="kv-row"><div class="k" style="width:auto">Lain-lain</div><div class="v"><input type="text" data-field="amk_lainLain"></div></div>
+
+      <p><b>2. Sila pihak tuan PASTIKAN perkara-perkara berikut sebelum mula kerja:</b></p>
+      <ol style="font-size:12px">
+        <li>Menyediakan pelan kerja</li>
+        <li>Memastikan peralatan kerja mencukupi dan digunakan</li>
+        <li>Memastikan peralatan keselamatan mencukupi dan digunakan</li>
+        <li>Mematuhi Peraturan Kerja TNB</li>
+      </ol>
+
+      <div class="page-break"></div>
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1104-PSI</div>
+      </div>
+
+      <p><b>3. Keselamatan :</b></p>
+      <p style="font-size:11px">Pihak tuan adalah dikehendaki untuk memastikan semua prosedur dan langkah-langkah keselamatan dipatuhi
+      sepanjang menjalankan kerja-kerja di tapak. Ini adalah Peralatan perlindungan diri dan peraturan-peraturan
+      yang di tetapkan oleh PBT (Pihak Berwajib Tempatan). Pihak tuan juga dipertanggungjawabkan untuk
+      mengambil tindakan segera ke atas semua aduan dan tuntutan PBT dan orang awam sepanjang kerja-kerja dijalankan di tapak.</p>
+
+      <p><b>4. Tempoh :</b></p>
+      <div class="kv-row"><div class="k">Tarikh Mula Kerja</div><div class="sep">:</div><div class="v"><input type="date" data-field="dateStart"></div></div>
+      <div class="kv-row"><div class="k">Cadangan Siap Kerja</div><div class="sep">:</div><div class="v"><input type="date" data-field="dateTargetEnd"></div></div>
+
+      <p><b>5. Pelan :</b></p>
+      <p style="font-size:11px"><b>Pihak tuan adalah dikehendaki untuk menyediakan semua dokumen di bawah dalam masa 7 hari selepas mula tugas /kerja siap:</b><br>
+      a) Pelan as built drawing HT (Talian atas/kabel) dan LV (Talian atas/kabel)<br>
+      b) Earthing test result (jika berkenaan)</p>
+
+      <p><b>6. Gambar Sebelum dan selepas :</b></p>
+      <p style="font-size:11px">Mohon sediakan gambar sebelum dan selepas bagi kerja yang berkaitan.</p>
+
+      <p><b>7. Tempoh Kredit dan Scrap :</b></p>
+      <p style="font-size:11px">Adalah menjadi amalan TNB dimana semua barang perlu dikredit dan scrap ke stor dalam tempoh 7 hari dari tarikh mula tugas/kerjasiap.</p>
+
+      <div class="page-break"></div>
+      <div class="doc-header">
+        <img class="logo" src="assets/tnb_logo.png" alt="TNB">
+        <div class="doc-code">ENGR-1104-PSI</div>
+      </div>
+
+      <p><b>8. Arahan kerja ini dikeluarkan oleh :</b></p>
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(2,1fr)">
+        <div class="sig-cell tall"><span class="role">Tandatangan<br><small>(Penyelia Projek)</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Jawatan</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Tandatangan<br><small>(KUP)</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>No Pekerja</label><span class="line"></span></div>
+          <div class="blank-field"><label>Jawatan</label><span class="line"></span></div>
+        </div>
+      </div>
+
+      <p><b>9. Arahan kerja ini diterima :</b> <i>Kontraktor Kompeten / Ketua Pasukan</i></p>
+      <div class="sig-cell tall" style="max-width:300px">
+        <span class="role">Tandatangan</span>
+        <div class="stamp-space"></div>
+        <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+        <div class="blank-field"><label>No Pekerja</label><span class="line"></span></div>
+        <div class="blank-field"><label>Jawatan</label><span class="line"></span></div>
+      </div>
+    </section>
+
+    <!-- ============ 9. GANTT ============ -->
+    <section class="doc-page landscape hidden-page" data-key="gantt">
+      <div class="doc-header">
+        <div>
+          <div class="kv-row"><div class="k" style="width:150px">NOMBOR PESANAN BELIAN</div><div class="sep">:</div><div class="v"><input type="text" data-field="poNumber"></div></div>
+          <div class="kv-row"><div class="k" style="width:150px">KETERANGAN KERJA</div><div class="sep">:</div><div class="v"><input type="text" data-field="workDescription"></div></div>
+        </div>
+        <div class="doc-code">ENGR-1105-PSI</div>
+      </div>
+      <div class="doc-title">Carta Perbatuan Perancangan Kerja</div>
+
+      <div class="gantt-wrap">
+        <table class="gantt-table" id="gantt-table"></table>
+      </div>
+      <button class="add-row-btn no-print" data-add="gantt">+ Tambah Skop Kerja</button>
+      <button class="add-row-btn no-print" data-add="ganttweek">+ Tambah Minggu</button>
+
+      <div class="gantt-legend">
+        <span><i class="box" style="background:#ff3b3b"></i>T = Target</span>
+        <span><i class="box" style="background:#ffd54a"></i>A = Actual</span>
+        <span><i class="box" style="background:#2e7d32"></i>Kerja Siap di Tapak</span>
+        <span class="small-note">(klik pada petak untuk tanda/nyahtanda hari)</span>
+      </div>
+
+      <table class="form-table" style="margin-top:10px">
+        <tr><td style="width:50%;vertical-align:top">
+          <b>Panduan sasaran kerja:</b>
+          <div class="kv-row" style="margin-top:6px"><div class="k" style="width:110px">Rentang KVT/KVR</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_kvtkvr"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">SAVR</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_savr"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">P/E</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_pe"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">SK5</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_sk5"></div></div>
+        </td>
+        <td style="width:50%;vertical-align:top">
+          <b>&nbsp;</b>
+          <div class="kv-row" style="margin-top:6px"><div class="k" style="width:110px">Rentang paip</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_paip"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">Tanam tiang</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_tiang"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">Term ht</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_termht"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">St thru ht</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_stthruht"></div></div>
+          <div class="kv-row"><div class="k" style="width:110px">HDD</div><div class="sep">:</div><div class="v"><input type="text" data-field="panduan_hdd"></div></div>
+        </td></tr>
+      </table>
+
+      <div class="sig-grid sig-grid-stamp" style="grid-template-columns: repeat(2,1fr)">
+        <div class="sig-cell tall"><span class="role">Disediakan Oleh<br><small>(Pihak TNB)</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+        <div class="sig-cell tall"><span class="role">Dipersetujui Oleh<br><small>(Pihak Kontraktor)</small></span>
+          <div class="stamp-space"></div>
+          <div class="blank-field"><label>Nama</label><span class="line"></span></div>
+          <div class="blank-field"><label>Tarikh</label><span class="line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10. REKOD TERSIMPAN (ONLINE) ============ -->
+    <section class="doc-page portrait hidden-page no-print-page" data-key="records">
+      <div class="doc-title" style="text-align:left">Rekod Tersimpan (Online)</div>
+      <p style="font-size:12px">Sistem ini menyimpan borang secara online mengikut <b>No. Pesanan Belian (PO)</b>. Masukkan No. PO untuk memuatkan semula borang yang pernah disimpan dan edit, atau pilih terus daripada senarai di bawah.</p>
+
+      <div class="kv-row" style="margin-top:14px">
+        <div class="k" style="width:160px">No. Pesanan Belian</div>
+        <div class="sep">:</div>
+        <div class="v" style="flex:0 0 260px"><input type="text" id="cloud-po-input" placeholder="Contoh: 42154803"></div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="add-row-btn" id="cloud-load-btn">🔎 Cari &amp; Muat Borang</button>
+        <button class="add-row-btn" id="cloud-save-btn">☁️ Simpan Borang Semasa ke Awan</button>
+        <button class="add-row-btn" id="cloud-refresh-btn">🔄 Muat Semula Senarai</button>
+      </div>
+      <div id="cloud-status" style="margin-top:10px;font-size:12px;min-height:16px"></div>
+
+      <table class="form-table" style="margin-top:16px">
+        <thead>
+          <tr><th>No. PO</th><th>Nama Kontraktor</th><th>Keterangan Kerja</th><th style="width:130px">Kemaskini Terakhir</th><th style="width:70px" class="no-print">Tindakan</th></tr>
+        </thead>
+        <tbody id="cloud-records-body"><tr><td colspan="5" style="text-align:center;color:#888">Memuatkan senarai...</td></tr></tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>

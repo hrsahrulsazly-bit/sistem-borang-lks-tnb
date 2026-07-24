@@ -1,0 +1,9 @@
+{
+  "name": "sistem-borang-lks-tnb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistem Borang Laporan Kerja Selesai (LKS) - TNB",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}
