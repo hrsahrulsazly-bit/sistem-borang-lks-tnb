@@ -83,12 +83,24 @@ function loadState() {
 }
 
 let saveTimer = null;
+let hasUnsavedCloudChanges = false;
 function saveState() {
+  hasUnsavedCloudChanges = true;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, 250);
 }
+
+// Warn before closing/leaving the tab if there are edits not yet sent to the
+// cloud (page 10) - workers commonly close the tab thinking it auto-saved
+// online, when only the local browser copy was updated.
+window.addEventListener("beforeunload", (e) => {
+  if (!hasUnsavedCloudChanges) return;
+  e.preventDefault();
+  e.returnValue = "";
+  return "";
+});
 
 function fmtMoney(n) {
   const v = Number(n) || 0;
@@ -804,6 +816,7 @@ async function saveToCloud() {
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || "Gagal simpan.");
+    hasUnsavedCloudChanges = false;
     statusEl.innerHTML = `<span style="color:#12742f">Berjaya disimpan untuk No. PO ${escapeHtml(po)}.</span>`;
     refreshCloudList();
   } catch (e) {
@@ -829,6 +842,7 @@ async function loadFromCloud(po) {
     state = Object.assign(defaultState(), json.data);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     renderAll();
+    hasUnsavedCloudChanges = false;
     statusEl.innerHTML = `<span style="color:#12742f">Borang untuk No. PO ${escapeHtml(po)} berjaya dimuatkan. Anda kini boleh mengedit dan simpan semula.</span>`;
   } catch (e) {
     statusEl.innerHTML = `<span style="color:#b3261e">Ralat: ${escapeHtml(e.message)}</span>`;
