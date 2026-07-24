@@ -832,13 +832,34 @@ async function refreshCloudList() {
       <td>${escapeHtml(r.contractorName || "")}</td>
       <td>${escapeHtml(r.workDescription || "")}</td>
       <td>${r.updatedAt ? new Date(r.updatedAt).toLocaleString("ms-MY") : ""}</td>
-      <td class="no-print"><button class="add-row-btn" data-open-po="${escapeAttr(r.poNumber)}">Buka</button></td>
+      <td class="no-print" style="display:flex;gap:4px">
+        <button class="add-row-btn" data-open-po="${escapeAttr(r.poNumber)}">Buka</button>
+        <button class="del-row-btn" data-delete-po="${escapeAttr(r.poNumber)}">Padam</button>
+      </td>
     </tr>`).join("");
     body.querySelectorAll("[data-open-po]").forEach(btn => {
       btn.addEventListener("click", () => loadFromCloud(btn.getAttribute("data-open-po")));
     });
+    body.querySelectorAll("[data-delete-po]").forEach(btn => {
+      btn.addEventListener("click", () => deleteFromCloud(btn.getAttribute("data-delete-po")));
+    });
   } catch (e) {
     body.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#b3261e">Ralat memuatkan senarai: ${escapeHtml(e.message)}</td></tr>`;
+  }
+}
+
+async function deleteFromCloud(po) {
+  const statusEl = document.getElementById("cloud-status");
+  if (!confirm(`Padam rekod tersimpan untuk No. PO ${po} secara kekal? Tindakan ini tidak boleh dibatalkan.`)) return;
+  statusEl.textContent = "Memadam...";
+  try {
+    const res = await fetch("/api/delete?po=" + encodeURIComponent(po), { method: "DELETE" });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || "Gagal memadam.");
+    statusEl.innerHTML = `<span style="color:#12742f">Rekod untuk No. PO ${escapeHtml(po)} telah dipadam.</span>`;
+    refreshCloudList();
+  } catch (e) {
+    statusEl.innerHTML = `<span style="color:#b3261e">Ralat: ${escapeHtml(e.message)}</span>`;
   }
 }
 
