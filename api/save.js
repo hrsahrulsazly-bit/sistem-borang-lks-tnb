@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const { getSupabase } = require('./_supabase');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,17 +19,19 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    await kv.set(`record:${key}`, data);
-
-    const meta = {
-      poNumber: key,
-      contractorName: (data.common && data.common.contractorName) || '',
-      workDescription: (data.common && data.common.workDescription) || '',
-      updatedAt: new Date().toISOString()
+    const supabase = getSupabase();
+    const row = {
+      po_number: key,
+      contractor_name: (data.common && data.common.contractorName) || '',
+      work_description: (data.common && data.common.workDescription) || '',
+      data,
+      updated_at: new Date().toISOString()
     };
-    await kv.hset('record-index', { [key]: JSON.stringify(meta) });
 
-    res.status(200).json({ ok: true, meta });
+    const { error } = await supabase.from('lks_records').upsert(row, { onConflict: 'po_number' });
+    if (error) throw error;
+
+    res.status(200).json({ ok: true });
   } catch (e) {
     res.status(500).json({ error: e.message || 'Ralat pelayan.' });
   }

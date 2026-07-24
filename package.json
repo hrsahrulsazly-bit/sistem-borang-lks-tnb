@@ -4,6 +4,6 @@
   "private": true,
   "description": "Sistem Borang Laporan Kerja Selesai (LKS) - TNB",
   "dependencies": {
-    "@vercel/kv": "^2.0.0"
+    "@supabase/supabase-js": "^2.45.0"
   }
 }

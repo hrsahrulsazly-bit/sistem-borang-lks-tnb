@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const { getSupabase } = require('./_supabase');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -7,13 +7,20 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const all = (await kv.hgetall('record-index')) || {};
-    const records = Object.values(all)
-      .map((v) => {
-        try { return typeof v === 'string' ? JSON.parse(v) : v; } catch (e) { return null; }
-      })
-      .filter(Boolean)
-      .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+    const supabase = getSupabase();
+    const { data, error } = await supabase
+      .from('lks_records')
+      .select('po_number, contractor_name, work_description, updated_at')
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+
+    const records = (data || []).map((r) => ({
+      poNumber: r.po_number,
+      contractorName: r.contractor_name,
+      workDescription: r.work_description,
+      updatedAt: r.updated_at
+    }));
 
     res.status(200).json({ records });
   } catch (e) {

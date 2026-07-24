@@ -1,4 +1,4 @@
-const { kv } = require('@vercel/kv');
+const { getSupabase } = require('./_supabase');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,12 +13,19 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const data = await kv.get(`record:${po}`);
-    if (!data) {
+    const supabase = getSupabase();
+    const { data: row, error } = await supabase
+      .from('lks_records')
+      .select('data')
+      .eq('po_number', po)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!row) {
       res.status(404).json({ error: `Tiada rekod dijumpai untuk No. PO ${po}.` });
       return;
     }
-    res.status(200).json({ data });
+    res.status(200).json({ data: row.data });
   } catch (e) {
     res.status(500).json({ error: e.message || 'Ralat pelayan.' });
   }
