@@ -22,9 +22,7 @@
     </nav>
     <div class="side-actions">
       <button id="btn-print-all">🖨️ Cetak Semua Borang (PDF)</button>
-      <button id="btn-export">⬇️ Simpan Data (.json)</button>
-      <button id="btn-import">⬆️ Muat Naik Data (.json)</button>
-      <button id="btn-reset">🗑️ Reset Semua Data</button>
+      <button id="btn-settings-gear">⚙️ Tetapan</button>
       <input type="file" id="file-import" accept="application/json" style="display:none">
     </div>
   </aside>
@@ -591,6 +589,26 @@
     </section>
 
   </main>
+</div>
+
+<div id="settings-modal" class="settings-modal hidden no-print">
+  <div class="settings-modal-inner">
+    <button id="settings-close-btn" class="settings-close-x" aria-label="Tutup">✕</button>
+    <h3>⚙️ Tetapan</h3>
+
+    <div id="settings-lock">
+      <p class="small-note">Bahagian ini dikunci. Masukkan kata laluan untuk teruskan.</p>
+      <input type="password" id="settings-password" placeholder="Kata laluan" autocomplete="off">
+      <button id="settings-unlock-btn" class="add-row-btn" style="margin-top:8px">Buka Kunci</button>
+      <div id="settings-error" style="color:#b3261e;font-size:12px;margin-top:6px"></div>
+    </div>
+
+    <div id="settings-actions" class="hidden">
+      <button id="btn-export">⬇️ Simpan Data (.json)</button>
+      <button id="btn-import">⬆️ Muat Naik Data (.json)</button>
+      <button id="btn-reset">🗑️ Reset Semua Data</button>
+    </div>
+  </div>
 </div>
 
 <script src="js/data.js"></script>

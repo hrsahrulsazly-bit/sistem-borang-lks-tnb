@@ -657,6 +657,48 @@ function wirePrintButtons() {
   });
 }
 
+/* ---------------- Settings gear (password-gated: Simpan/Muat Naik/Reset) ---------------- */
+const SETTINGS_PASSWORD = "GHCL2026";
+
+function wireSettingsGear() {
+  const modal = document.getElementById("settings-modal");
+  const gearBtn = document.getElementById("btn-settings-gear");
+  const closeBtn = document.getElementById("settings-close-btn");
+  const unlockBtn = document.getElementById("settings-unlock-btn");
+  const passwordInput = document.getElementById("settings-password");
+  const errorEl = document.getElementById("settings-error");
+  const lockPane = document.getElementById("settings-lock");
+  const actionsPane = document.getElementById("settings-actions");
+  if (!modal) return;
+
+  function openModal() {
+    lockPane.classList.remove("hidden");
+    actionsPane.classList.add("hidden");
+    passwordInput.value = "";
+    errorEl.textContent = "";
+    modal.classList.remove("hidden");
+    passwordInput.focus();
+  }
+  function closeModal() {
+    modal.classList.add("hidden");
+  }
+  function tryUnlock() {
+    if (passwordInput.value === SETTINGS_PASSWORD) {
+      lockPane.classList.add("hidden");
+      actionsPane.classList.remove("hidden");
+      errorEl.textContent = "";
+    } else {
+      errorEl.textContent = "Kata laluan salah. Sila cuba lagi.";
+    }
+  }
+
+  gearBtn.addEventListener("click", openModal);
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+  unlockBtn.addEventListener("click", tryUnlock);
+  passwordInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryUnlock(); });
+}
+
 /* ---------------- Export / Import / Reset ---------------- */
 function wireDataButtons() {
   document.getElementById("btn-export").addEventListener("click", () => {
@@ -828,6 +870,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wirePrintButtons();
   wireDataButtons();
   wireCloudRecords();
+  wireSettingsGear();
   wireAddButtons();
   renderAll();
   showPage("checklist");

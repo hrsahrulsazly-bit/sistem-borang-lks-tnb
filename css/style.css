@@ -298,6 +298,50 @@ table.gantt-table .qty-col input { width: 100%; box-sizing: border-box; font-siz
 .gantt-legend { display:flex; gap: 18px; margin-top: 8px; font-size: 11px; align-items:center; }
 .gantt-legend .box { width: 16px; height: 16px; display:inline-block; border: 1px solid #555; margin-right: 4px; vertical-align: middle;}
 
+/* --------- Settings modal (password-gated: Simpan/Muat Naik/Reset) --------- */
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.settings-modal.hidden { display: none; }
+.settings-modal-inner {
+  background: #fff;
+  border-radius: 8px;
+  padding: 22px;
+  width: 320px;
+  max-width: 90vw;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+}
+.settings-modal-inner h3 { margin: 0 0 14px 0; color: var(--tnb-blue); }
+.settings-close-x {
+  position: absolute;
+  top: 10px; right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+}
+#settings-lock input[type=password] { margin-top: 4px; }
+#settings-actions { display: flex; flex-direction: column; gap: 8px; }
+#settings-actions button, #settings-lock button {
+  background: var(--tnb-blue);
+  color: #fff;
+  border: 1px solid var(--tnb-blue);
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12.5px;
+}
+#settings-actions button:hover, #settings-lock button:hover { opacity: .85; }
+.hidden { display: none !important; }
+
 .page-break { height: 0; }
 
 /* --------- Field book / laporan harian --------- */
