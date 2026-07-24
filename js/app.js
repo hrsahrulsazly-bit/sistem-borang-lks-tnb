@@ -249,12 +249,12 @@ function lineAmounts(li) {
 function renderBqBody() {
   const body = document.getElementById("bq-body");
   if (!body) return;
-  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
   body.innerHTML = state.lineItems.map((li, i) => {
     const { amtActual, amtPO, diff } = lineAmounts(li);
+    const seNo = (state.serviceEntries[i] && state.serviceEntries[i].seNo) || "";
     return `<tr>
       <td style="text-align:center">${i + 1}</td>
-      <td class="li-service-id" style="text-align:center">${escapeHtml(seNo)}</td>
+      <td class="li-service-id" id="bq-serviceId-${i}" style="text-align:center">${escapeHtml(seNo)}</td>
       <td><input type="text" data-li-idx="${i}" data-li-field="desc" value="${escapeAttr(li.desc)}"></td>
       <td><input type="text" data-li-idx="${i}" data-li-field="unit" value="${escapeAttr(li.unit)}"></td>
       <td><input type="number" step="any" data-li-idx="${i}" data-li-field="qtyActual" value="${escapeAttr(li.qtyActual)}"></td>
@@ -272,12 +272,12 @@ function renderBqBody() {
 function renderJmsBody() {
   const body = document.getElementById("jms-body");
   if (!body) return;
-  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
   body.innerHTML = state.lineItems.map((li, i) => {
     const { amtActual, amtPO } = lineAmounts(li);
+    const seNo = (state.serviceEntries[i] && state.serviceEntries[i].seNo) || "";
     return `<tr>
       <td style="text-align:center">${i + 1}</td>
-      <td class="li-service-id" style="text-align:center">${escapeHtml(seNo)}</td>
+      <td class="li-service-id" id="jms-serviceId-${i}" style="text-align:center">${escapeHtml(seNo)}</td>
       <td><input type="text" data-li-idx="${i}" data-li-field="desc" value="${escapeAttr(li.desc)}"></td>
       <td><input type="text" data-li-idx="${i}" data-li-field="unit" value="${escapeAttr(li.unit)}"></td>
       <td><input type="number" step="any" data-li-idx="${i}" data-li-field="rate" value="${escapeAttr(li.rate)}"></td>
@@ -353,8 +353,9 @@ function renderServiceEntries() {
         const otherEl = document.querySelector(`#${otherId} [data-se-idx="${idx}"][data-se-field="${field}"]`);
         if (otherEl && otherEl.value !== el.value) otherEl.value = el.value;
 
-        // the first Service Entry's number doubles as the Service ID for every BQ/JMS line item
-        if (idx === 0 && field === "seNo") syncServiceIdFromSE();
+        // each Service Entry row's number doubles as the Service ID for the
+        // SAME-numbered row in BQ LKS / JMS (row 1 SE -> row 1 Service ID, etc.)
+        if (field === "seNo") syncServiceIdFromSE(idx);
 
         refreshDisplays();
         saveState();
@@ -366,7 +367,7 @@ function renderServiceEntries() {
         state.serviceEntries.splice(idx, 1);
         if (!state.serviceEntries.length) state.serviceEntries.push(emptyServiceEntry());
         renderServiceEntries();
-        if (idx === 0) syncServiceIdFromSE();
+        syncAllServiceIds();
         refreshDisplays();
         saveState();
       });
@@ -374,9 +375,18 @@ function renderServiceEntries() {
   });
 }
 
-function syncServiceIdFromSE() {
-  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
-  document.querySelectorAll(".li-service-id").forEach(el => { el.textContent = seNo; });
+// update just row `idx`'s Service ID cells (in place, keeps focus elsewhere)
+function syncServiceIdFromSE(idx) {
+  const seNo = (state.serviceEntries[idx] && state.serviceEntries[idx].seNo) || "";
+  const bqEl = document.getElementById(`bq-serviceId-${idx}`);
+  if (bqEl) bqEl.textContent = seNo;
+  const jmsEl = document.getElementById(`jms-serviceId-${idx}`);
+  if (jmsEl) jmsEl.textContent = seNo;
+}
+
+// re-sync every row (used after add/remove rows shift indices)
+function syncAllServiceIds() {
+  state.lineItems.forEach((li, i) => syncServiceIdFromSE(i));
 }
 
 /* ---------------- Material usage (Jadual Imbangan) ---------------- */
