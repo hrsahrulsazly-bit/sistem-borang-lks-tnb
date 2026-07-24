@@ -165,7 +165,7 @@ function bindCommonFields() {
   document.querySelectorAll("[data-field]").forEach(el => {
     const key = el.getAttribute("data-field");
     if (key === "totalClaimed" || key === "totalClaimed_mirror" || key === "totalPO_mirror") return; // computed/readonly mirrors
-    if (key in state.common) el.value = state.common[key];
+    el.value = key in state.common ? state.common[key] : ""; // always set (even to blank) so stale values don't linger after a reset/reload
     el.addEventListener("input", () => {
       state.common[key] = el.value;
       document.querySelectorAll(`[data-field="${key}"]`).forEach(other => { if (other !== el) other.value = el.value; });
@@ -817,7 +817,13 @@ async function saveToCloud() {
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || "Gagal simpan.");
     hasUnsavedCloudChanges = false;
-    statusEl.innerHTML = `<span style="color:#12742f">Berjaya disimpan untuk No. PO ${escapeHtml(po)}.</span>`;
+
+    // clear the form so the next worker/supervisor starts a fresh, blank entry
+    state = defaultState();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    renderAll();
+
+    statusEl.innerHTML = `<span style="color:#12742f">Berjaya disimpan untuk No. PO ${escapeHtml(po)}. Borang telah dikosongkan untuk kegunaan pekerja seterusnya.</span>`;
     refreshCloudList();
   } catch (e) {
     statusEl.innerHTML = `<span style="color:#b3261e">Ralat: ${escapeHtml(e.message)}</span>`;
