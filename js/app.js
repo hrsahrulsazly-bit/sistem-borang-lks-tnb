@@ -249,11 +249,12 @@ function lineAmounts(li) {
 function renderBqBody() {
   const body = document.getElementById("bq-body");
   if (!body) return;
+  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
   body.innerHTML = state.lineItems.map((li, i) => {
     const { amtActual, amtPO, diff } = lineAmounts(li);
     return `<tr>
-      <td><input type="text" data-li-idx="${i}" data-li-field="item" value="${escapeAttr(li.item)}" style="width:100%"></td>
-      <td><input type="text" data-li-idx="${i}" data-li-field="serviceId" value="${escapeAttr(li.serviceId)}"></td>
+      <td style="text-align:center">${i + 1}</td>
+      <td class="li-service-id" style="text-align:center">${escapeHtml(seNo)}</td>
       <td><input type="text" data-li-idx="${i}" data-li-field="desc" value="${escapeAttr(li.desc)}"></td>
       <td><input type="text" data-li-idx="${i}" data-li-field="unit" value="${escapeAttr(li.unit)}"></td>
       <td><input type="number" step="any" data-li-idx="${i}" data-li-field="qtyActual" value="${escapeAttr(li.qtyActual)}"></td>
@@ -271,11 +272,12 @@ function renderBqBody() {
 function renderJmsBody() {
   const body = document.getElementById("jms-body");
   if (!body) return;
+  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
   body.innerHTML = state.lineItems.map((li, i) => {
     const { amtActual, amtPO } = lineAmounts(li);
     return `<tr>
       <td style="text-align:center">${i + 1}</td>
-      <td><input type="text" data-li-idx="${i}" data-li-field="serviceId" value="${escapeAttr(li.serviceId)}"></td>
+      <td class="li-service-id" style="text-align:center">${escapeHtml(seNo)}</td>
       <td><input type="text" data-li-idx="${i}" data-li-field="desc" value="${escapeAttr(li.desc)}"></td>
       <td><input type="text" data-li-idx="${i}" data-li-field="unit" value="${escapeAttr(li.unit)}"></td>
       <td><input type="number" step="any" data-li-idx="${i}" data-li-field="rate" value="${escapeAttr(li.rate)}"></td>
@@ -351,6 +353,9 @@ function renderServiceEntries() {
         const otherEl = document.querySelector(`#${otherId} [data-se-idx="${idx}"][data-se-field="${field}"]`);
         if (otherEl && otherEl.value !== el.value) otherEl.value = el.value;
 
+        // the first Service Entry's number doubles as the Service ID for every BQ/JMS line item
+        if (idx === 0 && field === "seNo") syncServiceIdFromSE();
+
         refreshDisplays();
         saveState();
       });
@@ -361,11 +366,17 @@ function renderServiceEntries() {
         state.serviceEntries.splice(idx, 1);
         if (!state.serviceEntries.length) state.serviceEntries.push(emptyServiceEntry());
         renderServiceEntries();
+        if (idx === 0) syncServiceIdFromSE();
         refreshDisplays();
         saveState();
       });
     });
   });
+}
+
+function syncServiceIdFromSE() {
+  const seNo = (state.serviceEntries[0] && state.serviceEntries[0].seNo) || "";
+  document.querySelectorAll(".li-service-id").forEach(el => { el.textContent = seNo; });
 }
 
 /* ---------------- Material usage (Jadual Imbangan) ---------------- */
