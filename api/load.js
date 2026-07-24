@@ -1,4 +1,4 @@
-const { getSupabase } = require('./_supabase');
+const { getRedis } = require('./_db');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,19 +13,13 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const supabase = getSupabase();
-    const { data: row, error } = await supabase
-      .from('lks_records')
-      .select('data')
-      .eq('po_number', po)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!row) {
+    const redis = getRedis();
+    const data = await redis.get(`record:${po}`);
+    if (!data) {
       res.status(404).json({ error: `Tiada rekod dijumpai untuk No. PO ${po}.` });
       return;
     }
-    res.status(200).json({ data: row.data });
+    res.status(200).json({ data });
   } catch (e) {
     res.status(500).json({ error: e.message || 'Ralat pelayan.' });
   }
